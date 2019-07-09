@@ -16,8 +16,8 @@ class _HandicapScoresState extends State<HandicapScores> {
   StreamSubscription<QuerySnapshot> subscription;
   List<DocumentSnapshot> dataList;
   CollectionReference collectionReference;
-  bool succeed = false;
-  bool darkLight = false;
+  bool success = false;
+  bool darkModeSwitch = false;
   var dayMonth = new DateFormat('yMd').format(DateTime.now());
   bool five = true;
   bool zero = true;
@@ -65,7 +65,7 @@ class _HandicapScoresState extends State<HandicapScores> {
     subscription = collectionReference.snapshots().listen((dataSnapshot) {
       setState(() {
         dataList = dataSnapshot.documents;
-        succeed = true;
+        success = true;
       });
     });
   }
@@ -74,10 +74,10 @@ class _HandicapScoresState extends State<HandicapScores> {
     Widget button;
     if (zero == false) {
       button = new RaisedButton(
-        color: darkLight ? Colors.white : Colors.black,
+        color: darkModeSwitch ? Colors.white : Colors.black,
         child: new Text(
           'Stats per Hole',
-          style: new TextStyle(color: darkLight ? Colors.black : Colors.white),
+          style: new TextStyle(color: darkModeSwitch ? Colors.black : Colors.white),
         ),
         onPressed: () {
           if (zero == true) {
@@ -98,27 +98,27 @@ class _HandicapScoresState extends State<HandicapScores> {
     return button;
   }
 
-  Widget test() {
+  Widget handicapPageBuild() {
     List<String> dates = [];
-    succeed ? hole1 = dataList[0].data['1'] : hole1 = [1];
-    succeed ? hole2 = dataList[0].data['2'] : hole1 = [90];
-    succeed ? hole3 = dataList[0].data['3'] : hole1 = [90];
-    succeed ? hole4 = dataList[0].data['4'] : hole1 = [90];
-    succeed ? hole5 = dataList[0].data['5'] : hole1 = [1];
-    succeed ? hole6 = dataList[0].data['6'] : hole1 = [90];
-    succeed ? hole7 = dataList[0].data['7'] : hole1 = [90];
-    succeed ? hole8 = dataList[0].data['8'] : hole1 = [90];
-    succeed ? hole9 = dataList[0].data['9'] : hole1 = [90];
-    succeed ? hole10 = dataList[0].data['10'] : hole1 = [1];
-    succeed ? hole11 = dataList[0].data['11'] : hole1 = [90];
-    succeed ? hole12 = dataList[0].data['12'] : hole1 = [90];
-    succeed ? hole13 = dataList[0].data['13'] : hole1 = [90];
-    succeed ? hole14 = dataList[0].data['14'] : hole1 = [1];
-    succeed ? hole15 = dataList[0].data['15'] : hole1 = [90];
-    succeed ? hole16 = dataList[0].data['16'] : hole1 = [90];
-    succeed ? hole17 = dataList[0].data['17'] : hole1 = [90];
-    succeed ? hole18 = dataList[0].data['18'] : hole1 = [90];
-    succeed ? date = dataList[0].data['Date'] : date = ['YPPPP'];
+    success ? hole1 = dataList[0].data['1'] : hole1 = [1];
+    success ? hole2 = dataList[0].data['2'] : hole1 = [90];
+    success ? hole3 = dataList[0].data['3'] : hole1 = [90];
+    success ? hole4 = dataList[0].data['4'] : hole1 = [90];
+    success ? hole5 = dataList[0].data['5'] : hole1 = [1];
+    success ? hole6 = dataList[0].data['6'] : hole1 = [90];
+    success ? hole7 = dataList[0].data['7'] : hole1 = [90];
+    success ? hole8 = dataList[0].data['8'] : hole1 = [90];
+    success ? hole9 = dataList[0].data['9'] : hole1 = [90];
+    success ? hole10 = dataList[0].data['10'] : hole1 = [1];
+    success ? hole11 = dataList[0].data['11'] : hole1 = [90];
+    success ? hole12 = dataList[0].data['12'] : hole1 = [90];
+    success ? hole13 = dataList[0].data['13'] : hole1 = [90];
+    success ? hole14 = dataList[0].data['14'] : hole1 = [1];
+    success ? hole15 = dataList[0].data['15'] : hole1 = [90];
+    success ? hole16 = dataList[0].data['16'] : hole1 = [90];
+    success ? hole17 = dataList[0].data['17'] : hole1 = [90];
+    success ? hole18 = dataList[0].data['18'] : hole1 = [90];
+    success ? date = dataList[0].data['Date'] : date = ['YPPPP'];
     if (hole18.isNotEmpty && hole1.isNotEmpty) {
       setState(() {
         score.length = hole1.length;
@@ -149,11 +149,6 @@ class _HandicapScoresState extends State<HandicapScores> {
       }
     }
 
-    Firestore.instance
-        .collection('users')
-        .document(widget.user)
-        .updateData({'bestScore': score.reduce(min)});
-
     if (score.length > 0) {
       setState(() {
         zero = false;
@@ -164,12 +159,18 @@ class _HandicapScoresState extends State<HandicapScores> {
         five = false;
       });
     }
-    var sum2 =
+
+    var scoreAvg =
         (score.fold(initialValue, (curr, next) => curr + next)) / score.length;
-    handicap = ((sum2 - 73.1) * 113) / 130;
+    handicap = ((scoreAvg - 73.1) * 113) / 130;
+
+    Firestore.instance
+        .collection('users')
+        .document(widget.user)
+        .updateData({'bestScore': score.reduce(min)});
 
     return new Scaffold(
-      backgroundColor: darkLight ? Colors.black : Colors.white,
+      backgroundColor: darkModeSwitch ? Colors.black : Colors.white,
       body: new Center(
         child: new ListView(
           children: <Widget>[
@@ -180,7 +181,7 @@ class _HandicapScoresState extends State<HandicapScores> {
                 textAlign: TextAlign.center,
                 style: new TextStyle(
                     fontSize: five ? 20.0 : 30.0,
-                    color: darkLight ? Colors.white : Colors.black),
+                    color: darkModeSwitch ? Colors.white : Colors.black),
               ),
             ),
             new Container(
@@ -197,17 +198,17 @@ class _HandicapScoresState extends State<HandicapScores> {
                         'Round Date',
                         style: new TextStyle(
                             fontSize: 25.0,
-                            color: darkLight ? Colors.white : Colors.black),
+                            color: darkModeSwitch ? Colors.white : Colors.black),
                       ),
                       trailing: new Text(
                         'Score',
                         style: new TextStyle(
                             fontSize: 25.0,
-                            color: darkLight ? Colors.white : Colors.black),
+                            color: darkModeSwitch ? Colors.white : Colors.black),
                       ),
                     ),
                     Divider(
-                      color: darkLight ? Colors.white : Colors.black,
+                      color: darkModeSwitch ? Colors.white : Colors.black,
                       height: 0.0,
                     ),
                     new Container(
@@ -221,14 +222,14 @@ class _HandicapScoresState extends State<HandicapScores> {
                               style: new TextStyle(
                                   fontSize: 18.0,
                                   color:
-                                      darkLight ? Colors.white : Colors.black),
+                                      darkModeSwitch ? Colors.white : Colors.black),
                             ),
                             trailing: new Text(
                               '${zero ? '' : score[index]}',
                               style: new TextStyle(
                                   fontSize: 18.0,
                                   color:
-                                      darkLight ? Colors.white : Colors.black),
+                                      darkModeSwitch ? Colors.white : Colors.black),
                             ),
                           );
                         },
@@ -243,7 +244,7 @@ class _HandicapScoresState extends State<HandicapScores> {
                           textAlign: TextAlign.center,
                           style: new TextStyle(
                               fontSize: 30.0,
-                              color: darkLight ? Colors.white : Colors.black),
+                              color: darkModeSwitch ? Colors.white : Colors.black),
                         )),
                   ],
                 ),
@@ -257,6 +258,6 @@ class _HandicapScoresState extends State<HandicapScores> {
 
   @override
   Widget build(BuildContext context) {
-    return test();
+    return handicapPageBuild();
   }
 }

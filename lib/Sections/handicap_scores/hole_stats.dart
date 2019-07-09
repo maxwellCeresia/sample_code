@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -203,8 +202,6 @@ class _HoleStatsState extends State<HoleStats> {
         allHole[16] = hole17Avg.round();
         allHole[17] = hole18Avg.round();
         plusMinus();
-        print(value);
-        print(value.reduce(min));
       });
     }
     return new Scaffold(
