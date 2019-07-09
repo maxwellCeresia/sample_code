@@ -20,17 +20,17 @@ class MyApp extends StatelessWidget {
             .copyWith(caption: new TextStyle(color: Colors.white)),
       ),
       debugShowCheckedModeBanner: false,
-      home: SignInPage(),
+      home: SignInPageStart(),
     );
   }
 }
 
-class SignInPage extends StatefulWidget {
+class SignInPageStart extends StatefulWidget {
   @override
-  _SignInPageState createState() => _SignInPageState();
+  _SignInPageStartState createState() => _SignInPageStartState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _SignInPageStartState extends State<SignInPageStart> {
   FirebaseUser user;
   String firstName;
   String memberFirstName;
